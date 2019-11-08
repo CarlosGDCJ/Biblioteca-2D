@@ -218,22 +218,23 @@ int DrawLine(point * p1, point * p2, window * win, viewport * port, bufferdevice
     }
     else {
       if ((pd2->y - pd1->y) < 0) {
+        
         m = (pd2->y - pd1->y)/(pd2->x - pd1->x);
         e = m - 0.5;
-        for(k = 0; k <= (pd2->x - pd1->x); k++) {
+        for(k = 0; k < (pd2->x - pd1->x); k++) {
           dev->buffer[(port->ymin + port->ymax - j) * dev->MaxX + i] = color;
-          while (e < 0) {
+          while (e <= 0) {
             j = j - 1;
             e = e + 1.0;
           }
           i = i + 1;
-          e = e + m;  
+          e = e + m;
         }
       }
       else {
         m = (pd2->y - pd1->y)/(pd2->x - pd1->x);
         e = m - 0.5;
-        for(k = 0; k <= (pd2->x - pd1->x); k++) {
+        for(k = 0; k < (pd2->x - pd1->x); k++) {
           dev->buffer[(port->ymin + port->ymax - j) * dev->MaxX + i] = color;
           while (e >= 0) {
             j = j + 1;
@@ -244,28 +245,6 @@ int DrawLine(point * p1, point * p2, window * win, viewport * port, bufferdevice
         }
       }
     }
-    
-
-  //    b = pd1->y - a*pd1->x;
-  //    while (i < pd2->x) {
-  //      dev->buffer[(port->ymin + port->ymax - j) * dev->MaxX + i] = color;
-  //      aux = j;
-  //      j = round(a*(++i) + b);
-       
-  //      if (j > aux) {
-	//  while (aux < j) {
-	//    dev->buffer[(port->ymin + port->ymax - aux) * dev->MaxX + i] = color;
-	//    aux++;
-	//    }
-  //        }
-  //      if (j < aux) {
-	//  while (aux > j) { 
-	//    dev->buffer[(port->ymin + port->ymax - aux) * dev->MaxX + i] = color;
-	//    aux--;
-	//    }
-  //        }
-        
-  //      }
 
   return 1;
   }
