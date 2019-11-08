@@ -209,26 +209,42 @@ int DrawLine(point * p1, point * p2, window * win, viewport * port, bufferdevice
    j = pd1->y;
    
    if (pd1->x == pd2->x) { // Delta x = 0
-    //  while (j < pd2->y) {
-    //    // Observe como podemos arrumar a orientação do 
-    //    // sistema de coordenadas.
-    //    dev->buffer[(port->ymin + port->ymax - j) * dev->MaxX + i] = color;
-    //    j++;
-    //    }
-      j = pd1->x;
-      i = pd1->y;
+     while (j < pd2->y) {
+       // Observe como podemos arrumar a orientação do 
+       // sistema de coordenadas.
+       dev->buffer[(port->ymin + port->ymax - j) * dev->MaxX + i] = color;
+       j++;
+       }
     }
-    m = (pd2->y - pd1->y)/(pd2->x - pd1->x);
-    e = m - 0.5;
-    for(k = 0; k <= (pd2->x - pd1->x); k++) {
-      dev->buffer[(port->ymin + port->ymax - j) * dev->MaxX + i] = color;
-      while (e >= 0) {
-        j = j + 1;
-        e = e - 1.0;
+    else {
+      if ((pd2->y - pd1->y) < 0) {
+        m = (pd2->y - pd1->y)/(pd2->x - pd1->x);
+        e = m - 0.5;
+        for(k = 0; k <= (pd2->x - pd1->x); k++) {
+          dev->buffer[(port->ymin + port->ymax - j) * dev->MaxX + i] = color;
+          while (e < 0) {
+            j = j - 1;
+            e = e + 1.0;
+          }
+          i = i + 1;
+          e = e + m;  
+        }
       }
-      i = i + 1;
-      e = e + m;
+      else {
+        m = (pd2->y - pd1->y)/(pd2->x - pd1->x);
+        e = m - 0.5;
+        for(k = 0; k <= (pd2->x - pd1->x); k++) {
+          dev->buffer[(port->ymin + port->ymax - j) * dev->MaxX + i] = color;
+          while (e >= 0) {
+            j = j + 1;
+            e = e - 1.0;
+          }
+          i = i + 1;
+          e = e + m;
+        }
+      }
     }
+    
 
   //    b = pd1->y - a*pd1->x;
   //    while (i < pd2->x) {
