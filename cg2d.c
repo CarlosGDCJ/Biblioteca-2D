@@ -208,7 +208,7 @@ int DrawLine(point * p1, point * p2, window * win, viewport * port, bufferdevice
    i = pd1->x;
    j = pd1->y;
    
-   if (pd1->x == pd2->x) { // Delta x = 0
+   if (pd1->x == pd2->x) { // Caso Delta x = 0: Linha vertical
      while (j < pd2->y) {
        // Observe como podemos arrumar a orientação do 
        // sistema de coordenadas.
@@ -217,7 +217,7 @@ int DrawLine(point * p1, point * p2, window * win, viewport * port, bufferdevice
        }
     }
     else {
-      if ((pd2->y - pd1->y) < 0) {
+      if ((pd2->y - pd1->y) < 0) { // Linha "descendo", j diminui
         
         m = (pd2->y - pd1->y)/(pd2->x - pd1->x);
         e = m - 0.5;
@@ -231,7 +231,7 @@ int DrawLine(point * p1, point * p2, window * win, viewport * port, bufferdevice
           e = e + m;
         }
       }
-      else {
+      else { // Linha "subindo", j aumenta
         m = (pd2->y - pd1->y)/(pd2->x - pd1->x);
         e = m - 0.5;
         for(k = 0; k < (pd2->x - pd1->x); k++) {
