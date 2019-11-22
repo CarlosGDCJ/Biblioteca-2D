@@ -51,7 +51,7 @@ face * CreateFace(int numbers_of_points) {
   return fob;
   }
 
-int SetPointFace(float x, float y, float z, int color, face * fc) {
+point3d * SetPointFace(float x, float y, float z, int color, face * fc) {
   point3d * pnt;
 
   pnt = (point3d *) malloc(sizeof(point3d));
@@ -63,7 +63,7 @@ int SetPointFace(float x, float y, float z, int color, face * fc) {
   fc->points[fc->numbers_of_points] = *pnt;
   fc->numbers_of_points = fc->numbers_of_points + 1;
 
-  return 0;
+  return pnt;
   }
 
 point3d * SetNormal(float x, float y, float z) {
@@ -127,12 +127,15 @@ point3d * LinearTransf3d(matrix3d * W, point3d * u) {
  point3d * p;
   
  p = (point3d *) malloc(sizeof(point3d));
-  
+// Descomente para printar os valores das operações
  p->x = W->a11*u->x + W->a12*u->y + W->a13*u->z + W->a14*u->w;
+//  printf("X = %0.3f * %0.3f + %0.3f * %0.3f + %0.3f * %0.3f + %0.3f * %0.3f = %0.3f \n", W->a11, u->x, W->a12, u->y, W->a13, u->z, W->a14, u->w, p->x);
  p->y = W->a21*u->x + W->a22*u->y + W->a23*u->z + W->a24*u->w;
+//  printf("Y = %0.3f * %0.3f + %0.3f * %0.3f + %0.3f * %0.3f + %0.3f * %0.3f = %0.3f \n", W->a21, u->x, W->a22, u->y, W->a23, u->z, W->a24, u->w, p->y);
  p->z = W->a31*u->x + W->a32*u->y + W->a33*u->z + W->a34*u->w;
+//  printf("Z = %0.3f * %0.3f + %0.3f * %0.3f + %0.3f * %0.3f + %0.3f * %0.3f = %0.3f \n", W->a31, u->x, W->a32, u->y, W->a33, u->z, W->a34, u->w, p->z);
  p->w = W->a41*u->x + W->a42*u->y + W->a43*u->z + W->a44*u->w;
- 
+//  printf("W = %0.3f * %0.3f + %0.3f * %0.3f + %0.3f * %0.3f + %0.3f * %0.3f = %0.3f \n", W->a41, u->x, W->a42, u->y, W->a43, u->z, W->a44, u->w, p->w);
  p->color = u->color;
   
  return p;  
@@ -219,4 +222,118 @@ object * PerspProjFaces(object3d * ob3d, float zpp, float zcp) {
  
  return facelist;  
  }
+
+ matrix3d * Set3DRotZMatrix(float theta) {
+  matrix3d * m;
+
+  m = (matrix3d *) malloc(sizeof(matrix3d));
+  
+  m->a11 = cos((theta*M_PI)/180.0); 
+  m->a12 = (-1.0)*sin((theta*M_PI)/180.0);
+  m->a13 = 0.0;
+  m->a14 = 0.0;
+
+  m->a21 = sin((theta*M_PI)/180.0);
+  m->a22 = cos((theta*M_PI)/180.0);
+  m->a23 = 0.0;
+  m->a24 = 0.0;
+
+
+  m->a31 = 0.0;
+  m->a32 = 0.0;
+  m->a33 = 1.0;
+  m->a34 = 0.0;
+
+  m->a41 = 0.0;
+  m->a42 = 0.0;
+  m->a43 = 0.0;
+  m->a44 = 1.0;
+
+  
+  return m;
+  }
+
+  matrix3d * Set3DRotXMatrix(float theta) {
+  matrix3d * m;
+
+  m = (matrix3d *) malloc(sizeof(matrix3d));
+  
+  m->a11 = 1.0; 
+  m->a12 = 0.0;
+  m->a13 = 0.0;
+  m->a14 = 0.0;
+
+  m->a21 = 0.0;
+  m->a22 = cos((theta*M_PI)/180.0);
+  m->a23 = (-1.0)*sin((theta*M_PI)/180.0);
+  m->a24 = 0.0;
+
+
+  m->a31 = 0.0;
+  m->a32 = sin((theta*M_PI)/180.0);
+  m->a33 = cos((theta*M_PI)/180.0);
+  m->a34 = 0.0;
+
+  m->a41 = 0.0;
+  m->a42 = 0.0;
+  m->a43 = 0.0;
+  m->a44 = 1.0;
+
+  
+  return m;
+  }
+
+  matrix3d * Set3DRotYMatrix(float theta) {
+  matrix3d * m;
+
+  m = (matrix3d *) malloc(sizeof(matrix3d));
+  
+  m->a11 = cos((theta*M_PI)/180.0); 
+  m->a12 = 0.0;
+  m->a13 = sin((theta*M_PI)/180.0);
+  m->a14 = 0.0;
+
+  m->a21 = 0.0;
+  m->a22 = 1.0;
+  m->a23 = 0.0;
+  m->a24 = 0.0;
+
+
+  m->a31 = (-1.0)*sin((theta*M_PI)/180.0);
+  m->a32 = 0.0;
+  m->a33 = cos((theta*M_PI)/180.0);
+  m->a34 = 0.0;
+
+  m->a41 = 0.0;
+  m->a42 = 0.0;
+  m->a43 = 0.0;
+  m->a44 = 1.0;
+
+  
+  return m;
+  }
  
+object3d * TransObj3d(object3d * ob, matrix3d * m) {
+  int i, j;
+  object3d * obj;
+  point3d * pt;
+  face * teste;
+
+  //Descomente abaixo para ver o funcionamento
+  obj = CreateObject3D(ob->numbers_of_faces);
+  // printf("Numero de faces: %d\n", ob->numbers_of_faces);
+  for(i=0;i<ob->numbers_of_faces;i++) {
+    obj->faces[i] = *(CreateFace(ob->faces[i].numbers_of_points));
+    // printf("\tNumero de pontos na face %d: %d\n", i, ob->faces[i].numbers_of_points);
+    for(j=0; j < ob->faces[i].numbers_of_points; j++){
+      // printf("\t\tPonto %d \n", j);
+      // printf("\t\t\tCoordenada X: %f \n \t\t\tCoordenada Y: %f \n \t\t\tCoordenada Z: %f \n \t\t\tCoordenada W: %f \n", ob->faces[i].points[j].x, ob->faces[i].points[j].y, ob->faces[i].points[j].z, ob->faces[i].points[j].w);
+      pt = LinearTransf3d(m,&(ob->faces[i].points[j]));
+      SetPointFace(pt->x, pt->y, pt->z, pt->color, &(obj->faces[i]));
+      // printf("\t\t\tNovo X: %f \n \t\t\tNovo Y: %f \n \t\t\tNovo Z: %f \n \t\t\tNovo W: %f \n", obj->faces[i].points[j].x, obj->faces[i].points[j].y, obj->faces[i].points[j].z, obj->faces[i].points[j].w);
+      }
+    SetObject3D(&(obj->faces[i]),obj);
+    }
+
+  return obj;
+  }
