@@ -312,6 +312,66 @@ object * PerspProjFaces(object3d * ob3d, float zpp, float zcp) {
   
   return m;
   }
+
+  matrix3d * SetProjPersMatrix(float Zup, float Zcp) {
+  matrix3d * m;
+
+  m = (matrix3d *) malloc(sizeof(matrix3d));
+  
+  m->a11 = 1.0;
+  m->a12 = 0.0;
+  m->a13 = 0.0;
+  m->a14 = 0.0;
+
+  m->a21 = 0.0;
+  m->a22 = 1.0;
+  m->a23 = 0.0;
+  m->a24 = 0.0;
+
+
+  m->a31 = 0.0;
+  m->a32 = 0.0;
+  m->a33 = Zup/(Zup-Zcp);
+  m->a34 = (-1)*(Zup*Zcp)/(Zup-Zcp);
+
+  m->a41 = 0.0;
+  m->a42 = 0.0;
+  m->a43 = 1.0/(Zup-Zcp);
+  m->a44 = (-1)*Zcp/(Zup-Zcp);
+
+  
+  return m;
+  }
+
+  matrix3d * SetProjParaMatrix() {
+  matrix3d * m;
+
+  m = (matrix3d *) malloc(sizeof(matrix3d));
+  
+  m->a11 = 1.0;
+  m->a12 = 0.0;
+  m->a13 = 0.0;
+  m->a14 = 0.0;
+
+  m->a21 = 0.0;
+  m->a22 = 1.0;
+  m->a23 = 0.0;
+  m->a24 = 0.0;
+
+
+  m->a31 = 0.0;
+  m->a32 = 0.0;
+  m->a33 = 0.0;
+  m->a34 = 0.0;
+
+  m->a41 = 0.0;
+  m->a42 = 0.0;
+  m->a43 = 0.0;
+  m->a44 = 1.0;
+
+  
+  return m;
+  }
  
 object3d * TransObj3d(object3d * ob, matrix3d * m) {
   int i, j;

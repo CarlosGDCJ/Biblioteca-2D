@@ -44,4 +44,7 @@ object3d * TransObj3d(object3d * ob, matrix3d * m);
 matrix3d * Set3DRotXMatrix(float theta);
 matrix3d * Set3DRotYMatrix(float theta);
 matrix3d * Set3DRotZMatrix(float theta);
+matrix3d * SetProjPersMatrix(float Zup, float Zcp);
+matrix3d * SetProjParaMatrix();
+
 
